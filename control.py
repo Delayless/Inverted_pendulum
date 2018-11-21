@@ -3,6 +3,7 @@ import PID
 import serial
 import struct
 
+
 def recv(ser_temp):
 	"""
 	读数据
@@ -11,6 +12,15 @@ def recv(ser_temp):
 	data_temp = ser_temp.read(8)
 
 	return data_temp
+
+
+def Limit_Amplitude(pwm):
+        Amplitude = 6900
+        if pwm < -Amplitude:
+                pwm = -Amplitude
+        if pwm > Amplitude:
+                pwm = Amplitude
+        return pwm
 
 
 def Data_Process(ser_buff):
@@ -38,11 +48,16 @@ def Data_Process(ser_buff):
 	
 	pwm = Balance_PWM - Position_PWM
 	pwm = Limit_Amplitude(pwm)
+	if pwm < 0:
+		signal = '+'
+	else:
+		signal = '-'
+	ser_buff.write(signal)
 	ser_buff.write(pwm)
 	
 
 def main():
-	ser = serial.Serial('/dev/ttyUSB0', 115200, timeout=0.2)
+	ser = serial.Serial('/dev/ttyUSB0', 128000, timeout=0.2)
 	
 	# 先只控制直立环,后面再解决两个环的通讯协议问题
 	ser.flushOutput()

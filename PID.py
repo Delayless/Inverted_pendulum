@@ -57,11 +57,3 @@ class PositionPID:
 		self.LastError = self.Error
 
 
-def Limit_Amplitude(pwm):
-	Amplitude = 6900
-	if pwm < -Amplitude:
-		pwm = -Amplitude
-	if pwm > Amplitude:
-		pwm = Amplitude
-
-	return pwm
