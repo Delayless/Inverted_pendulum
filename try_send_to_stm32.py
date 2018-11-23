@@ -8,7 +8,7 @@ def recv(ser_temp):
 	"""
 	读数据
 	"""
-	ser_temp.read_until(terminator='^')
+	ser_temp.read_until(terminator=b'^')
 	data_temp = ser_temp.read(9)
 
 	return data_temp
