@@ -8,7 +8,7 @@ def recv(ser_temp):
 	"""
 	读数据
 	"""
-	ser_temp.read_until(terminator='$')
+	ser_temp.read_until(terminator='$', size=50)
 	data_temp = ser_temp.read(9)
 
 	return data_temp
@@ -45,16 +45,14 @@ def Data_Process(ser_buff):
 	pwm = Balance_PWM - Position_PWM
 	pwm = Limit_Amplitude(pwm)
 	if pwm < 0:
-		signal = '+'
-	else:
 		signal = '-'
+	else:
+		signal = '+'
 	ser_buff.write(signal)
 	ser_buff.write(pwm)
 	"""
 
 def main():
-	
-	# 先只控制直立环,后面再解决两个环的通讯协议问题
 	ser.flushOutput()
 	ser.flushInput()
 	Angle_Median = 3085  # 平衡时的角度读数 
@@ -65,7 +63,7 @@ def main():
 		
 
 if __name__ == "__main__":
-	ser = serial.Serial('/dev/ttyUSB0', 128000, timeout=0.2)
+	ser = serial.Serial('/dev/ttyUSB0', 128000, timeout=0.01) # 0.2s还没接到数据基本上程序就GG了
 	main()
 	while True:
 		Data_Process(ser)
